@@ -9,6 +9,7 @@ export const state = {
   validator: null,
   schemaFromUrl: false, // Track if current schema is from URL
   currentSchemaUrl: null, // Store the current schema URL
+  externalSchemaCache: new Map(), // Cache for external schema references
 };
 
 

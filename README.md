@@ -17,6 +17,7 @@ A lightweight, client-side web application for formatting, validating, and build
 
 - **Dynamic form generation** from JSON Schema URLs or pasted schemas
 - **Support for JSON Schema Draft 2020-12** with full validation
+- **Advanced schema features** including `oneOf`, `allOf`, and `$ref` resolution
 - **Interactive array and object editing** with add/remove controls
 - **Smart field handling** - only includes meaningful values in output
 - **Real-time validation** with detailed error reporting
@@ -114,6 +115,16 @@ Try these public JSON Schema examples:
 - GitHub Actions: `https://json.schemastore.org/github-workflow.json`
 - Package.json: `https://json.schemastore.org/package.json`
 - ESLint Config: `https://json.schemastore.org/eslintrc.json`
+
+### Advanced Schema Features
+
+The editor supports complex JSON Schema compositions:
+
+- **`oneOf`**: Choose between different schema alternatives
+- **`allOf`**: Combine multiple schemas (fields from all schemas are merged)
+- **`$ref`**: Reference resolution within schemas and external URLs
+- **External references**: Automatic fetching and caching of external schema URLs
+- **Nested schemas**: Complex object and array structures
 
 ## ⌨️ Keyboard Shortcuts
 

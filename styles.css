@@ -153,6 +153,21 @@ body {
   font-size: 0.85rem;
 }
 
+.app-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  filter: none !important;
+  background: var(--surface-alt) !important;
+  color: var(--fg);
+  border-color: var(--border) !important;
+}
+
+.app-button:disabled:hover {
+  transform: none;
+  filter: none;
+}
+
 #theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -499,6 +514,20 @@ select:focus-visible {
   gap: 0.75rem;
 }
 
+.schema-allof {
+  padding: 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 0.75rem;
+}
+
+.schema-allof .helper-text {
+  margin-bottom: 0.75rem;
+  font-style: italic;
+  color: var(--accent);
+}
+
 .array-items {
   display: flex;
   flex-direction: column;
@@ -599,7 +628,257 @@ select:focus-visible {
     text-align: center;
     gap: 0.75rem;
   }
+}
+
+/* Pattern Properties Styling */
+.schema-pattern-properties {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: var(--surface-alt);
+  margin-top: 0.5rem;
+}
+
+.pattern-properties-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.pattern-properties-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pattern-property-entry {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+}
+
+.pattern-property-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pattern-property-name label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.pattern-property-name input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 0.875rem;
+}
+
+.pattern-property-name input.valid {
+  border-color: var(--success);
+  background: rgba(31, 138, 81, 0.1);
+}
+
+.pattern-property-name input.invalid {
+  border-color: var(--error);
+  background: rgba(208, 38, 50, 0.1);
+}
+
+/* Pattern Validation Styling */
+input.pattern-valid {
+  border-color: var(--success);
+  background: rgba(31, 138, 81, 0.05);
+}
+
+input.pattern-invalid {
+  border-color: var(--error);
+  background: rgba(208, 38, 50, 0.05);
+}
+
+input.pattern-valid:focus {
+  outline-color: var(--success);
+  box-shadow: 0 0 0 2px rgba(31, 138, 81, 0.2);
+}
+
+input.pattern-invalid:focus {
+  outline-color: var(--error);
+  box-shadow: 0 0 0 2px rgba(208, 38, 50, 0.2);
+}
+
+.pattern-property-value {
+  display: flex;
+  flex-direction: column;
+}
+
+.pattern-property-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .pattern-property-entry {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
   
+  .pattern-property-controls {
+    align-self: center;
+  }
+  
+  .pattern-words-wrapper {
+    max-height: 80px;
+  }
+  
+  .pattern-word-btn {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* Pattern Input Wrapper Styling */
+.pattern-input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.pattern-suggestions-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+  min-width: auto;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.pattern-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  box-shadow: var(--shadow);
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 0.25rem;
+}
+
+.pattern-suggestions-dropdown.hidden {
+  display: none;
+}
+
+.pattern-suggestion-item {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pattern-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.pattern-suggestion-item:hover {
+  background: var(--surface-alt);
+}
+
+.pattern-code {
+  display: block;
+  font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.875rem;
+  color: var(--accent);
+  background: var(--accent-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+  word-break: break-all;
+}
+
+.pattern-description {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--fg);
+}
+
+.pattern-examples {
+  display: block;
+  color: var(--fg);
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+/* Pattern Word Options Styling */
+.pattern-word-options {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+}
+
+.pattern-words-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+  opacity: 0.8;
+}
+
+.pattern-words-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.pattern-word-btn {
+  padding: 0.25rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  color: var(--fg);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pattern-word-btn:hover {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.pattern-word-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
   .github-attribution {
     margin-left: 0;
   }
