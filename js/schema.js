@@ -13,6 +13,7 @@ import {
   showTemporaryMessage
 } from './utils.js';
 import { showStatus } from './formatter.js';
+import { trackCopySchemaOutput, trackSaveSchemaFile, trackSchemaLoadFromPaste, trackSchemaLoadFromUrl } from './analytics.js';
 
 // Initialize AJV
 export const ajv = window.ajv2020
@@ -246,6 +247,7 @@ export async function handleSchemaLoad() {
     return;
   }
   showStatus("schema", "Loading schema…", "loading");
+  trackSchemaLoadFromUrl(url);
   try {
     const response = await fetch(url, { cache: "no-store" });
     if (!response.ok) {
@@ -275,6 +277,7 @@ export async function handleSchemaPaste() {
 
     // Track that this schema is NOT from URL
     state.schemaFromUrl = false;
+    trackSchemaLoadFromPaste();
     state.currentSchemaUrl = null;
 
     await applySchema(schema, "Schema parsed successfully.");
@@ -356,6 +359,7 @@ export function handleSchemaCopy() {
   }
   copyToClipboard(text)
     .then(() => showTemporaryMessage("Copied output to clipboard!", "success"))
+    .then(() => trackCopySchemaOutput())
     .catch(() => { });
 }
 
@@ -389,6 +393,7 @@ export function handleSchemaSave() {
   const success = saveSchemaJson(text, schemaName);
   if (success) {
     showTemporaryMessage("JSON saved to file!", "success");
+    trackSaveSchemaFile();
   } else {
     showStatus("schema", "Failed to save file. Please try again.", "error");
   }

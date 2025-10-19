@@ -3,6 +3,7 @@
 import { dom } from './dom.js';
 import { state } from './state.js';
 import { highlightJSON, computeLineColumn, copyToClipboard, showTemporaryMessage } from './utils.js';
+import { trackCopyFormatterOutput } from './analytics.js'
 
 export function showFormatterError(message) {
   dom.formatterError.textContent = message;
@@ -82,5 +83,6 @@ export function handleFormatterCopy() {
   }
   copyToClipboard(text)
     .then(() => showTemporaryMessage("Copied formatted JSON to clipboard.", "success"))
+    .then(() => trackCopyFormatterOutput())
     .catch(() => { });
 }
