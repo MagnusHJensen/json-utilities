@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Tools Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.17.1/ajv2020.min.js"
+    integrity="sha512-p5sFpd2pipqqvDr+bipEI4bGzNEE24IPv3NQtNcQeh+FAnFKBD8JaUpmKfoznN3vi2SGBEFusWxWARbfDyYjtg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <h1>JSON Tools</h1>
+      <p class="tagline">Format, validate, and build JSON in one place.</p>
+    </div>
+    <div class="header-controls">
+      <button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode">
+        <span class="toggle-icon" aria-hidden="true">🌞</span>
+        <span class="toggle-text">Light mode</span>
+      </button>
+      <div class="shortcut-hint" role="status">
+        <span>Shortcuts:</span>
+        <code>Ctrl/Cmd + Enter</code> format ·
+        <code>Ctrl/Cmd + Shift + C</code> copy ·
+        <code>Ctrl/Cmd + Shift + L</code> clear
+      </div>
+    </div>
+  </header>
+  <main class="app-main">
+    <aside class="tool-list" aria-label="Tool selection">
+      <h2 id="tool-label">Tools</h2>
+      <div class="tool-buttons" role="tablist" aria-labelledby="tool-label">
+        <button role="tab" id="tab-formatter" aria-controls="panel-formatter" aria-selected="true"
+          data-tool="formatter">
+          JSON Formatter
+        </button>
+        <button role="tab" id="tab-schema" aria-controls="panel-schema" aria-selected="false" data-tool="schema">
+          Schema Editor
+        </button>
+      </div>
+    </aside>
+    <section class="panes">
+      <section class="pane pane-left">
+        <section id="panel-formatter" class="tool-panel" role="tabpanel" aria-labelledby="tab-formatter">
+          <h2>JSON Formatter</h2>
+          <label class="field-label" for="formatter-input">Raw JSON</label>
+          <textarea id="formatter-input" spellcheck="false" aria-describedby="formatter-help"></textarea>
+          <p id="formatter-help" class="helper-text">
+            Paste JSON; formatting runs automatically. Errors list the line and column.
+          </p>
+          <div class="button-row">
+            <button type="button" id="formatter-format" class="app-button">Format</button>
+            <button type="button" id="formatter-copy" data-copy-target="formatter" class="app-button secondary">Copy
+              Output</button>
+            <button type="button" id="formatter-clear" class="app-button ghost">Clear</button>
+          </div>
+          <p id="formatter-error" class="error-message" role="alert" aria-live="polite"></p>
+        </section>
+        <section id="panel-schema" class="tool-panel hidden" role="tabpanel" aria-labelledby="tab-schema">
+          <h2>Schema-Based Editor</h2>
+          <div id="schema-config" class="schema-config">
+            <div class="schema-source">
+              <label class="field-label" for="schema-url">Schema URL</label>
+              <input id="schema-url" type="url" placeholder="https://example.com/schema.json"
+                aria-describedby="schema-url-help">
+              <p id="schema-url-help" class="helper-text">
+                Paste a JSON Schema URL and choose Load. For offline use, paste the schema below and select Use Pasted
+                Schema.
+              </p>
+              <div class="button-row schema-config-actions">
+                <button type="button" id="schema-load" class="app-button">Load Schema</button>
+                <button type="button" id="schema-use-paste" class="app-button secondary">Use Pasted Schema</button>
+              </div>
+            </div>
+            <div class="schema-raw-field">
+              <label class="field-label" for="schema-raw">Schema JSON (optional)</label>
+              <textarea id="schema-raw" spellcheck="false" rows="6"
+                placeholder="{ &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;, ... }"></textarea>
+            </div>
+          </div>
+          <div class="button-row schema-actions">
+            <button type="button" id="schema-change" class="app-button secondary hidden">Change Schema</button>
+            <button type="button" id="schema-share" class="app-button secondary hidden">Share</button>
+            <button type="button" id="schema-reset-values" class="app-button ghost hidden">Clear Values</button>
+            <button type="button" id="schema-copy" data-copy-target="schema" class="app-button">Copy JSON</button>
+          </div>
+          <p id="schema-status" class="status-message" role="status" aria-live="polite"></p>
+          <form id="schema-form" aria-live="polite"></form>
+        </section>
+      </section>
+      <section class="pane pane-right" aria-live="polite">
+        <div id="formatter-output-wrapper" class="output-wrapper">
+          <h2>Formatted JSON</h2>
+          <pre id="formatter-output" class="code-block" aria-label="Formatted JSON output"></pre>
+        </div>
+        <div id="schema-output-wrapper" class="output-wrapper hidden">
+          <h2>Schema Output &amp; Validation</h2>
+          <pre id="schema-output" class="code-block" aria-label="Generated JSON output"></pre>
+          <div id="schema-validation" class="validation-panel" aria-live="polite"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer class="app-footer">
+    <span>Built for fast, offline-ready JSON workflows.</span>
+  </footer>
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>
