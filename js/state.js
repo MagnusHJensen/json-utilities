@@ -26,7 +26,7 @@ export function getSchemaUrlFromURL() {
 
 export function updateURL(tool, schemaUrl = null) {
   const url = new URL(window.location);
-  
+
   // Handle tool parameter
   if (tool === 'formatter') {
     url.searchParams.delete('tool');
@@ -70,9 +70,9 @@ export function setActiveTool(tool) {
 export function initializeFromURL() {
   const toolFromURL = getToolFromURL();
   const schemaUrlFromURL = getSchemaUrlFromURL();
-  
+
   setActiveTool(toolFromURL);
-  
+
   // If there's a schema URL parameter, load it
   if (schemaUrlFromURL && toolFromURL === 'schema') {
     // We need to import this dynamically to avoid circular imports
