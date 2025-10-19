@@ -261,18 +261,19 @@ body {
   margin-top: 0;
 }
 
-.output-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  gap: 1rem;
-}
-
-.output-header h2 {
-  margin: 0;
+.output-wrapper h2 {
+  margin: 0 0 1rem 0;
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.output-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .field-label {
@@ -603,13 +604,14 @@ select:focus-visible {
     margin-left: 0;
   }
   
-  .output-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .output-wrapper h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
   }
   
-  .output-header h2 {
-    font-size: 1.25rem;
+  .output-actions {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
   }
 }

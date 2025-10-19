@@ -2,7 +2,7 @@
 
 import { dom } from './dom.js';
 import { state } from './state.js';
-import { highlightJSON, computeLineColumn, copyToClipboard } from './utils.js';
+import { highlightJSON, computeLineColumn, copyToClipboard, showTemporaryMessage } from './utils.js';
 
 export function showFormatterError(message) {
   dom.formatterError.textContent = message;
@@ -80,5 +80,7 @@ export function handleFormatterCopy() {
     showStatus("formatter", "Nothing to copy.", "error");
     return;
   }
-  copyToClipboard(text, "formatter", showStatus).catch(() => { });
+  copyToClipboard(text)
+    .then(() => showTemporaryMessage("Copied formatted JSON to clipboard.", "success"))
+    .catch(() => { });
 }

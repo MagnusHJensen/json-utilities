@@ -23,6 +23,7 @@ export const dom = {
   schemaChangeBtn: document.getElementById("schema-change"),
   schemaShareBtn: document.getElementById("schema-share"),
   schemaResetValuesBtn: document.getElementById("schema-reset-values"),
+  schemaSaveBtn: document.getElementById("schema-save"),
   schemaCopyBtn: document.getElementById("schema-copy"),
   schemaStatus: document.getElementById("schema-status"),
   schemaForm: document.getElementById("schema-form"),

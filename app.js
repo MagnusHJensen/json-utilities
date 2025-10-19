@@ -12,6 +12,7 @@ import {
   handleSchemaChange,
   handleSchemaResetValues,
   handleSchemaCopy,
+  handleSchemaSave,
   handleSchemaShare,
   setSchemaLoaded,
   updateSchemaOutput
@@ -59,6 +60,7 @@ function init() {
   dom.schemaChangeBtn.addEventListener("click", handleSchemaChange);
   dom.schemaShareBtn.addEventListener("click", handleSchemaShare);
   dom.schemaResetValuesBtn.addEventListener("click", handleSchemaResetValues);
+  dom.schemaSaveBtn.addEventListener("click", handleSchemaSave);
   dom.schemaCopyBtn.addEventListener("click", handleCopy);
 
   // Theme toggle

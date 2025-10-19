@@ -70,12 +70,12 @@
     <aside class="tool-list" aria-label="Tool selection">
       <h2 id="tool-label">Tools</h2>
       <div class="tool-buttons" role="tablist" aria-labelledby="tool-label">
-        <button role="tab" id="tab-formatter" aria-controls="panel-formatter" aria-selected="true"
+        <button role="tab" id="tab-schema" aria-controls="panel-schema" aria-selected="true" data-tool="schema">
+          Schema Editor
+        </button>
+        <button role="tab" id="tab-formatter" aria-controls="panel-formatter" aria-selected="false"
           data-tool="formatter">
           JSON Formatter
-        </button>
-        <button role="tab" id="tab-schema" aria-controls="panel-schema" aria-selected="false" data-tool="schema">
-          Schema Editor
         </button>
       </div>
     </aside>
@@ -126,16 +126,17 @@
       </section>
       <section class="pane pane-right" aria-live="polite">
         <div id="formatter-output-wrapper" class="output-wrapper">
-          <div class="output-header">
-            <h2>Formatted JSON</h2>
+          <h2>Formatted JSON</h2>
+          <div class="output-actions">
             <button type="button" id="formatter-copy" data-copy-target="formatter" class="app-button secondary">Copy
               Output</button>
           </div>
           <pre id="formatter-output" class="code-block" aria-label="Formatted JSON output"></pre>
         </div>
         <div id="schema-output-wrapper" class="output-wrapper hidden">
-          <div class="output-header">
-            <h2>Schema Output &amp; Validation</h2>
+          <h2>Schema Output &amp; Validation</h2>
+          <div class="output-actions">
+            <button type="button" id="schema-save" class="app-button secondary">Save to File</button>
             <button type="button" id="schema-copy" data-copy-target="schema" class="app-button secondary">Copy
               JSON</button>
           </div>

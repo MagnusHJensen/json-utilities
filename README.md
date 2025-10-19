@@ -21,6 +21,7 @@ A lightweight, client-side web application for formatting, validating, and build
 - **Smart field handling** - only includes meaningful values in output
 - **Real-time validation** with detailed error reporting
 - **URL sharing** for schema-based configurations
+- **File export** - save generated JSON directly to your computer
 - **Nested schema support** with compact, user-friendly layouts
 
 ### Additional Features
@@ -50,6 +51,7 @@ json-utilities/
 ├── app.js             # Application initialization and event binding
 └── js/
     ├── dom.js         # DOM element references and utilities
+    ├── file.js        # File operations and download functionality
     ├── formatter.js   # JSON formatting functionality
     ├── schema.js      # Schema editor and validation logic
     ├── state.js       # URL state management and tool switching

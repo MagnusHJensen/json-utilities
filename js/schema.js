@@ -2,6 +2,7 @@
 
 import { dom, getOneOfContainer, getArrayContainer } from './dom.js';
 import { state, updateURL } from './state.js';
+import { saveSchemaJson } from './file.js';
 import {
   getSingularForm,
   highlightJSON,
@@ -187,7 +188,7 @@ export function handleSchemaResetValues() {
   }
   renderSchemaForm(state.schema);
   updateSchemaOutput();
-  showStatus("schema", "Cleared values for the current schema.", "success");
+  showTemporaryMessage("Cleared values for the current schema.", "success");
 }
 
 export function handleSchemaCopy() {
@@ -200,8 +201,44 @@ export function handleSchemaCopy() {
     showStatus("schema", "Fill some values before copying.", "error");
     return;
   }
-  copyToClipboard(text).catch(() => { });
-  showTemporaryMessage("Copied output to clipboard!", "success");
+  copyToClipboard(text)
+    .then(() => showTemporaryMessage("Copied output to clipboard!", "success"))
+    .catch(() => { });
+}
+
+export function handleSchemaSave() {
+  if (!state.schema) {
+    showStatus("schema", "Load a schema first.", "error");
+    return;
+  }
+  const text = dom.schemaOutput.textContent.trim();
+  if (!text) {
+    showStatus("schema", "Fill some values before saving.", "error");
+    return;
+  }
+
+  // Try to get schema name for filename
+  let schemaName = null;
+  if (state.schema.title) {
+    schemaName = state.schema.title;
+  } else if (state.currentSchemaUrl) {
+    // Extract name from URL
+    try {
+      const url = new URL(state.currentSchemaUrl);
+      const pathname = url.pathname;
+      const filename = pathname.split('/').pop();
+      schemaName = filename.replace(/\.(json|schema)$/i, '');
+    } catch {
+      // Ignore URL parsing errors
+    }
+  }
+
+  const success = saveSchemaJson(text, schemaName);
+  if (success) {
+    showTemporaryMessage("JSON saved to file!", "success");
+  } else {
+    showStatus("schema", "Failed to save file. Please try again.", "error");
+  }
 }
 
 export function applySchema(schema, successMessage) {

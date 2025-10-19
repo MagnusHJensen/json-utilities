@@ -16,7 +16,7 @@ export const state = {
 export function getToolFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
   const tool = urlParams.get('tool');
-  return ['formatter', 'schema'].includes(tool) ? tool : 'formatter';
+  return ['formatter', 'schema'].includes(tool) ? tool : 'schema';
 }
 
 export function getSchemaUrlFromURL() {
@@ -28,7 +28,7 @@ export function updateURL(tool, schemaUrl = null) {
   const url = new URL(window.location);
 
   // Handle tool parameter
-  if (tool === 'formatter') {
+  if (tool === 'schema') {
     url.searchParams.delete('tool');
   } else {
     url.searchParams.set('tool', tool);
