@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Tools Platform - Social Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 1200px;
+            height: 630px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2459f4 0%, #6c8dff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+        }
+        
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 28px;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        
+        .features {
+            list-style: none;
+            font-size: 20px;
+            opacity: 0.85;
+        }
+        
+        .features li {
+            margin-bottom: 8px;
+        }
+        
+        .features li:before {
+            content: "✓ ";
+            margin-right: 8px;
+        }
+        
+        .preview {
+            flex: 1.2;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .preview-header {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .preview-content {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .json-key {
+            color: #87ceeb;
+        }
+        
+        .json-string {
+            color: #98fb98;
+        }
+        
+        .json-number {
+            color: #ffa07a;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="title">JSON Tools Platform</h1>
+            <p class="subtitle">Format, Validate & Build JSON</p>
+            <ul class="features">
+                <li>Real-time JSON formatting</li>
+                <li>Schema-based editor</li>
+                <li>URL sharing & validation</li>
+                <li>Offline-ready web app</li>
+            </ul>
+        </div>
+        <div class="preview">
+            <div class="preview-header">Live JSON Editor</div>
+            <div class="preview-content">
+{<br>
+&nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-string">"JSON Tools"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"version"</span>: <span class="json-string">"1.0.0"</span>,<br>
+&nbsp;&nbsp;<span class="json-key">"features"</span>: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-string">"formatter"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-string">"validator"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-string">"schema-editor"</span><br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;<span class="json-key">"active"</span>: <span class="json-number">true</span><br>
+}
+            </div>
+        </div>
+    </div>
+    <div class="footer">magnushjensen.github.io/json-utilities</div>
+</body>
+</html>

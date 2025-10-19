@@ -30,6 +30,8 @@ A lightweight, client-side web application for formatting, validating, and build
 - **Accessibility-first** with ARIA labels and keyboard navigation
 - **Offline-capable** - works entirely client-side with no server dependencies
 - **URL state management** - shareable links preserve tool selection and schema URLs
+- **Social media ready** - optimized Open Graph and Twitter Card meta tags for sharing
+- **GitHub integration** - direct link to source code in footer
 
 ## 🛠️ Technology Stack
 
