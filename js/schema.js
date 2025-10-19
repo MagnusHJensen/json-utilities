@@ -111,7 +111,6 @@ export async function resolveExternalRef(ref) {
   // Check cache for the base URL first
   if (state.externalSchemaCache.has(baseUrl)) {
     const baseSchema = state.externalSchemaCache.get(baseUrl);
-    console.log(`Using cached schema for: ${baseUrl}${fragment ? ` (fragment: #${fragment})` : ''}`);
     if (baseSchema === null) {
       // Previous fetch failed
       return null;
@@ -127,7 +126,6 @@ export async function resolveExternalRef(ref) {
   }
 
   try {
-    console.log(`Fetching external schema: ${baseUrl}`);
     const response = await fetch(baseUrl, { cache: "default" });
     if (!response.ok) {
       throw new Error(`Failed to fetch schema: ${response.status}`);
@@ -137,7 +135,6 @@ export async function resolveExternalRef(ref) {
 
     // Cache the base schema (without fragment)
     state.externalSchemaCache.set(baseUrl, baseSchema);
-    console.log(`Cached external schema: ${baseUrl}`);
 
     // If no fragment, return the whole schema
     if (!fragment) {
@@ -176,8 +173,6 @@ function resolveFragment(schema, fragment) {
 
     if (result === null) {
       console.error(`Failed to resolve fragment: #${fragment}`);
-    } else {
-      console.log(`Successfully resolved fragment: #${fragment}`);
     }
 
     return result;
@@ -205,10 +200,9 @@ export async function preResolveExternalRefs(schema) {
   // Handle $ref
   if (schema.$ref && typeof schema.$ref === 'string') {
     if (schema.$ref.startsWith('http://') || schema.$ref.startsWith('https://')) {
-      console.log(`Resolving external reference: ${schema.$ref}`);
       const externalSchema = await resolveExternalRef(schema.$ref);
       if (externalSchema) {
-        console.log(`Successfully resolved: ${schema.$ref}`);
+        (`Successfully resolved: ${schema.$ref}`);
         // Merge any additional properties from the referencing schema
         const { $ref, ...rest } = schema;
         const merged = { ...externalSchema, ...rest };
@@ -328,7 +322,6 @@ export function handleSchemaChange() {
 
   // Clear external schema cache to free memory
   state.externalSchemaCache.clear();
-  console.log("Cleared external schema cache");
 
   // Update URL to remove schema parameter
   updateURL(state.activeTool);
