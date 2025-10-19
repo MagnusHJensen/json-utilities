@@ -146,7 +146,7 @@ export async function handleSchemaShare() {
 
   try {
     const currentUrl = window.location.href;
-    await copyToClipboard(currentUrl, "schema", showStatus);
+    await copyToClipboard(currentUrl);
 
     // Show temporary success message
     showTemporaryMessage("URL copied to clipboard! Anyone with this link can access the same schema.", "success");

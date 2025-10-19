@@ -49,13 +49,14 @@ export function computeLineColumn(position, text) {
   return { line, column };
 }
 
+
 export function copyToClipboard(text, label, showStatusCallback) {
   if (!navigator.clipboard) {
     return Promise.reject(new Error("Clipboard API unavailable"));
   }
   return navigator.clipboard.writeText(text).then(
-    () => showStatusCallback(label, "Copied to clipboard.", "success"),
-    () => showStatusCallback(label, "Copy failed. Copy manually instead.", "error")
+    () => showStatusCallback != null && showStatusCallback(label, "Copied to clipboard.", "success"),
+    () => showStatusCallback != null && showStatusCallback(label, "Copy failed. Copy manually instead.", "error")
   );
 }
 
