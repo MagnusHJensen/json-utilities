@@ -4,44 +4,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Primary Meta Tags -->
   <title>JSON Tools Platform - Format, Validate & Build JSON</title>
   <meta name="title" content="JSON Tools Platform - Format, Validate & Build JSON">
-  <meta name="description" content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
+  <meta name="description"
+    content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
   <meta name="keywords" content="JSON, formatter, validator, schema, editor, tools, JavaScript, web app">
   <meta name="author" content="Magnus H. Jensen">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://magnushjensen.github.io/json-utilities/">
   <meta property="og:title" content="JSON Tools Platform - Format, Validate & Build JSON">
-  <meta property="og:description" content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
+  <meta property="og:description"
+    content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
   <meta property="og:image" content="https://magnushjensen.github.io/json-utilities/social-preview.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="JSON Tools Platform - Screenshot showing JSON formatter and schema editor interface">
-  
+  <meta property="og:image:alt"
+    content="JSON Tools Platform - Screenshot showing JSON formatter and schema editor interface">
+
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://magnushjensen.github.io/json-utilities/">
   <meta property="twitter:title" content="JSON Tools Platform - Format, Validate & Build JSON">
-  <meta property="twitter:description" content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
+  <meta property="twitter:description"
+    content="A lightweight, client-side web application for formatting, validating, and building JSON documents. Features real-time JSON formatting, schema-based editing, and URL sharing.">
   <meta property="twitter:image" content="https://magnushjensen.github.io/json-utilities/social-preview.png">
-  <meta property="twitter:image:alt" content="JSON Tools Platform - Screenshot showing JSON formatter and schema editor interface">
-  
+  <meta property="twitter:image:alt"
+    content="JSON Tools Platform - Screenshot showing JSON formatter and schema editor interface">
+
   <!-- Favicon and Icons -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  
+
   <!-- Additional Meta Tags -->
   <meta name="robots" content="index, follow">
   <meta name="language" content="English">
   <meta name="theme-color" content="#2459f4">
   <link rel="canonical" href="https://magnushjensen.github.io/json-utilities/">
-  
+
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.17.1/ajv2020.min.js"
     integrity="sha512-p5sFpd2pipqqvDr+bipEI4bGzNEE24IPv3NQtNcQeh+FAnFKBD8JaUpmKfoznN3vi2SGBEFusWxWARbfDyYjtg=="
@@ -81,12 +86,9 @@
           <label class="field-label" for="formatter-input">Raw JSON</label>
           <textarea id="formatter-input" spellcheck="false" aria-describedby="formatter-help"></textarea>
           <p id="formatter-help" class="helper-text">
-            Paste JSON; formatting runs automatically. Errors list the line and column.
+            Paste JSON; formatting runs automatically. Errors show line and column details.
           </p>
           <div class="button-row">
-            <button type="button" id="formatter-format" class="app-button">Format</button>
-            <button type="button" id="formatter-copy" data-copy-target="formatter" class="app-button secondary">Copy
-              Output</button>
             <button type="button" id="formatter-clear" class="app-button ghost">Clear</button>
           </div>
           <p id="formatter-error" class="error-message" role="alert" aria-live="polite"></p>
@@ -117,7 +119,6 @@
             <button type="button" id="schema-change" class="app-button secondary hidden">Change Schema</button>
             <button type="button" id="schema-share" class="app-button secondary hidden">Share</button>
             <button type="button" id="schema-reset-values" class="app-button ghost hidden">Clear Values</button>
-            <button type="button" id="schema-copy" data-copy-target="schema" class="app-button">Copy JSON</button>
           </div>
           <p id="schema-status" class="status-message" role="status" aria-live="polite"></p>
           <form id="schema-form" aria-live="polite"></form>
@@ -125,11 +126,19 @@
       </section>
       <section class="pane pane-right" aria-live="polite">
         <div id="formatter-output-wrapper" class="output-wrapper">
-          <h2>Formatted JSON</h2>
+          <div class="output-header">
+            <h2>Formatted JSON</h2>
+            <button type="button" id="formatter-copy" data-copy-target="formatter" class="app-button secondary">Copy
+              Output</button>
+          </div>
           <pre id="formatter-output" class="code-block" aria-label="Formatted JSON output"></pre>
         </div>
         <div id="schema-output-wrapper" class="output-wrapper hidden">
-          <h2>Schema Output &amp; Validation</h2>
+          <div class="output-header">
+            <h2>Schema Output &amp; Validation</h2>
+            <button type="button" id="schema-copy" data-copy-target="schema" class="app-button secondary">Copy
+              JSON</button>
+          </div>
           <pre id="schema-output" class="code-block" aria-label="Generated JSON output"></pre>
           <div id="schema-validation" class="validation-panel" aria-live="polite"></div>
         </div>
@@ -139,9 +148,11 @@
   <footer class="app-footer">
     <span>Built for fast, offline-ready JSON workflows.</span>
     <span class="github-attribution">
-      <a href="https://github.com/MagnusHJensen/json-utilities" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub">
+      <a href="https://github.com/MagnusHJensen/json-utilities" target="_blank" rel="noopener noreferrer"
+        aria-label="View source code on GitHub">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
         </svg>
         View on GitHub
       </a>

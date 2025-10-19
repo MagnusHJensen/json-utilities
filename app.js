@@ -3,7 +3,6 @@ import { dom } from './js/dom.js';
 import { state, setActiveTool, initializeFromURL } from './js/state.js';
 import {
   debounceFormatter,
-  formatFormatterInput,
   handleClearFormatter,
   handleFormatterCopy
 } from './js/formatter.js';
@@ -51,7 +50,6 @@ function init() {
 
   // Formatter events
   dom.formatterInput.addEventListener("input", debounceFormatter);
-  dom.formatterFormatBtn.addEventListener("click", () => formatFormatterInput("manual"));
   dom.formatterCopyBtn.addEventListener("click", handleCopy);
   dom.formatterClearBtn.addEventListener("click", handleClearFormatter);
 

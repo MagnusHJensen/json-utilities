@@ -81,3 +81,50 @@ export function addSchemaMessage(container, message, variant) {
   note.textContent = message;
   container.appendChild(note);
 }
+
+export // Show temporary message that disappears after a few seconds
+  function showTemporaryMessage(message, type = "success") {
+  const messageEl = document.createElement("div");
+  messageEl.className = `temporary-message ${type}`;
+  messageEl.textContent = message;
+  messageEl.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    background: var(--success);
+    color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+    max-width: 300px;
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  `;
+
+  if (type === "error") {
+    messageEl.style.background = "var(--error)";
+  }
+
+  document.body.appendChild(messageEl);
+
+  // Animate in
+  setTimeout(() => {
+    messageEl.style.opacity = "1";
+    messageEl.style.transform = "translateY(0)";
+  }, 10);
+
+  // Remove after 4 seconds
+  setTimeout(() => {
+    messageEl.style.opacity = "0";
+    messageEl.style.transform = "translateY(-10px)";
+    setTimeout(() => {
+      if (messageEl.parentNode) {
+        messageEl.parentNode.removeChild(messageEl);
+      }
+    }, 300);
+  }, 4000);
+}

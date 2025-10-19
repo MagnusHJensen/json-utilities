@@ -5,6 +5,7 @@ This directory contains assets for social media sharing and branding.
 ## Required Assets
 
 ### Social Preview Image (social-preview.png)
+
 - **Size**: 1200x630px
 - **Format**: PNG
 - **Content**: Screenshot of the JSON Tools Platform interface showing both the formatter and schema editor
@@ -12,9 +13,10 @@ This directory contains assets for social media sharing and branding.
 - **Background**: Clean, branded background matching the app's design
 
 ### Favicon Assets
+
 - **favicon.ico**: 16x16, 32x32, 48x48 multi-size ICO file
 - **favicon-16x16.png**: 16x16px PNG
-- **favicon-32x32.png**: 32x32px PNG  
+- **favicon-32x32.png**: 32x32px PNG
 - **apple-touch-icon.png**: 180x180px PNG for iOS devices
 
 ## Creating the Social Preview Image
@@ -22,11 +24,13 @@ This directory contains assets for social media sharing and branding.
 You can create the social preview image by:
 
 1. **Screenshot Method**:
+
    - Take a screenshot of the application at 1200x630 resolution
    - Add the title "JSON Tools Platform" overlay
    - Ensure good contrast and readability
 
 2. **Design Tool Method**:
+
    - Use Figma, Canva, or similar tool
    - Include app screenshot + branding
    - Export as PNG at 1200x630px

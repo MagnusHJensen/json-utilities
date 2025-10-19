@@ -13,7 +13,6 @@ export const dom = {
   formatterInput: document.getElementById("formatter-input"),
   formatterOutput: document.getElementById("formatter-output"),
   formatterError: document.getElementById("formatter-error"),
-  formatterFormatBtn: document.getElementById("formatter-format"),
   formatterCopyBtn: document.getElementById("formatter-copy"),
   formatterClearBtn: document.getElementById("formatter-clear"),
   themeToggle: document.getElementById("theme-toggle"),
