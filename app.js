@@ -19,39 +19,6 @@ import {
 } from './js/schema.js';
 import { handleThemeToggle, getThemeFromCookie, setTheme } from './js/theme.js';
 
-// Keyboard shortcuts
-function handleKeyboardShortcuts(event) {
-  const isModifier = event.ctrlKey || event.metaKey;
-  if (!isModifier) return;
-
-  if (event.key === "Enter") {
-    event.preventDefault();
-    if (state.activeTool === "formatter") {
-      formatFormatterInput("manual");
-    } else if (state.activeTool === "schema") {
-      updateSchemaOutput();
-    }
-  }
-
-  if (event.shiftKey && (event.key.toLowerCase() === "c")) {
-    event.preventDefault();
-    if (state.activeTool === "formatter") {
-      handleFormatterCopy();
-    } else {
-      handleSchemaCopy();
-    }
-  }
-
-  if (event.shiftKey && (event.key.toLowerCase() === "l")) {
-    event.preventDefault();
-    if (state.activeTool === "formatter") {
-      handleClearFormatter();
-    } else {
-      handleSchemaResetValues();
-    }
-  }
-}
-
 // Copy handler
 function handleCopy(event) {
   const target = event.currentTarget.dataset.copyTarget;
@@ -98,9 +65,6 @@ function init() {
 
   // Theme toggle
   dom.themeToggle.addEventListener("click", handleThemeToggle);
-
-  // Keyboard shortcuts
-  document.addEventListener("keydown", handleKeyboardShortcuts);
 
   // Set initial schema state
   setSchemaLoaded(false);
