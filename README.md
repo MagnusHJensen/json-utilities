@@ -2,6 +2,10 @@
 
 A lightweight, client-side web application for formatting, validating, and building JSON documents. Built with pure HTML, CSS, and vanilla JavaScript with no external dependencies beyond AJV for schema validation.
 
+[json.magnusjensen.dk](<(https://json.magnusjensen.dk/?utm_source=github&utm_medium=json-utilities)>)
+
+[![A screenshot of the website working.](./social-preview.png)](https://json.magnusjensen.dk/?utm_source=github&utm_medium=json-utilities)
+
 ![JSON Tools Platform](https://img.shields.io/badge/JSON-Tools-blue) ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## 🚀 Features
@@ -11,7 +15,6 @@ A lightweight, client-side web application for formatting, validating, and build
 - **Real-time JSON formatting** with automatic prettification and syntax highlighting
 - **Instant error detection** with clear, human-friendly error messages showing line and column numbers
 - **One-click operations** for formatting, copying, and clearing content
-- **Keyboard shortcuts** for power users (`Ctrl/Cmd + Enter` to format, `Ctrl/Cmd + Shift + C` to copy)
 
 ### Schema-Based JSON Editor
 
@@ -28,12 +31,8 @@ A lightweight, client-side web application for formatting, validating, and build
 ### Additional Features
 
 - **Light/Dark mode toggle** with system preference detection
-- **Fully responsive design** optimized for desktop and mobile
-- **Accessibility-first** with ARIA labels and keyboard navigation
-- **Offline-capable** - works entirely client-side with no server dependencies
 - **URL state management** - shareable links preserve tool selection and schema URLs
 - **Social media ready** - optimized Open Graph and Twitter Card meta tags for sharing
-- **GitHub integration** - direct link to source code in footer
 
 ## 🛠️ Technology Stack
 
@@ -126,45 +125,7 @@ The editor supports complex JSON Schema compositions:
 - **External references**: Automatic fetching and caching of external schema URLs
 - **Nested schemas**: Complex object and array structures
 
-## ⌨️ Keyboard Shortcuts
-
-| Shortcut               | Action                              |
-| ---------------------- | ----------------------------------- |
-| `Ctrl/Cmd + Enter`     | Format JSON or update schema output |
-| `Ctrl/Cmd + Shift + C` | Copy output to clipboard            |
-| `Ctrl/Cmd + Shift + L` | Clear current tool                  |
-
-## 🎨 Customization
-
-### Themes
-
-The application automatically detects system theme preferences and includes a manual toggle. Themes are stored in browser localStorage for persistence.
-
-### Extending Functionality
-
-The modular architecture makes it easy to add new tools:
-
-1. Add new tool button in `index.html`
-2. Create corresponding panel and output sections
-3. Add tool logic in a new module (e.g., `js/newtool.js`)
-4. Update `app.js` to wire up event listeners
-5. Add tool to state management in `js/state.js`
-
 ## 🔧 Configuration
-
-### Schema Validation
-
-The application uses AJV with JSON Schema Draft 2020-12. To modify validation behavior:
-
-```javascript
-// In js/schema.js
-const ajv = new Ajv({
-  strict: false,
-  allErrors: true,
-  verbose: true,
-  // Add custom configuration here
-});
-```
 
 ### URL Parameters
 
@@ -210,5 +171,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Live Demo**: https://json.magnusjensen.dk
+**Live Demo**: https://json.magnusjensen.dk/?utm_source=github&utm_medium=json-utilities
+
 **Repository**: https://github.com/MagnusHJensen/json-utilities
