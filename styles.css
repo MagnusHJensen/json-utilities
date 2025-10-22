@@ -828,7 +828,54 @@ input.pattern-invalid:focus {
   font-size: 0.8rem;
 }
 
-/* Pattern Word Options Styling */
+/* OneOf Schema Styling */
+.schema-oneof {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: var(--surface-alt);
+  margin-top: 0.5rem;
+}
+
+.schema-oneof-base {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.schema-oneof-selector-wrapper {
+  margin-bottom: 1rem;
+}
+
+.schema-oneof-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--fg);
+}
+
+.schema-oneof-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 0.875rem;
+}
+
+.schema-oneof-options {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.schema-oneof-options:empty {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
 .pattern-word-options {
   margin-top: 0.5rem;
   padding: 0.5rem;

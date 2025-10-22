@@ -585,6 +585,21 @@ function createOneOfField(schema, path, container, isRequired = false) {
     hint.textContent = schema.description;
     wrapper.appendChild(hint);
   }
+
+  // Check if this is a complex oneOf with base properties and mutually exclusive variants
+  const hasBaseProperties = schema.properties && Object.keys(schema.properties).length > 0;
+  const hasRequiredOnlyVariants = schema.oneOf.every(variant =>
+    variant.required &&
+    Array.isArray(variant.required) &&
+    (!variant.properties || Object.keys(variant.properties).length === 0)
+  );
+
+  // Use mutual exclusivity for complex schemas with base properties + required-only variants
+  if (hasBaseProperties && hasRequiredOnlyVariants) {
+    return createMutuallyExclusiveOneOfField(schema, path, container, isRequired, wrapper);
+  }
+
+  // Use original simple rendering for regular oneOf schemas
   const selector = document.createElement("select");
   selector.className = "schema-oneof-select";
   schema.oneOf.forEach((option, idx) => {
@@ -609,6 +624,310 @@ function createOneOfField(schema, path, container, isRequired = false) {
     optionsContainer.dataset.selectedVariant = String(index);
     selector.value = String(index);
     createControlForSchema(variant, path, optionsContainer, isRequired);
+  }
+}
+
+function createMutuallyExclusiveOneOfField(schema, path, container, isRequired, wrapper) {
+  // Render all base properties (always visible)
+  const baseProperties = schema.properties || {};
+  const baseRequired = schema.required || [];
+
+  // Get all fields that are mentioned in oneOf variants (these become mutually exclusive)
+  const mutuallyExclusiveFields = new Set();
+  schema.oneOf.forEach(variant => {
+    if (variant.required) {
+      variant.required.forEach(field => {
+        if (baseProperties[field]) {
+          mutuallyExclusiveFields.add(field);
+        }
+      });
+    }
+  });
+
+  const baseFieldset = document.createElement("div");
+  baseFieldset.className = "schema-oneof-base";
+
+  Object.entries(baseProperties).forEach(([key, childSchema]) => {
+    const fieldPath = path === "root" ? key : `${path}.${key}`;
+    const field = document.createElement("div");
+    field.className = "schema-field";
+    field.dataset.propertyName = key;
+    const isFieldRequired = baseRequired.includes(key);
+    const isMutuallyExclusive = mutuallyExclusiveFields.has(key);
+
+    const label = document.createElement("label");
+    label.setAttribute("for", fieldId(fieldPath));
+    label.textContent = `${key}${isFieldRequired ? " *" : ""}`;
+    if (isMutuallyExclusive) {
+      label.textContent += " (choose one)";
+    }
+    field.appendChild(label);
+
+    const childEffective = resolveSchema(childSchema);
+    if (childEffective && childEffective.description) {
+      const hint = document.createElement("p");
+      hint.className = "helper-text";
+      hint.textContent = childEffective.description;
+      field.appendChild(hint);
+    }
+
+    createControlForSchema(childSchema, fieldPath, field, isFieldRequired);
+
+    // Add mutual exclusivity logic for fields mentioned in oneOf variants
+    if (isMutuallyExclusive) {
+      const input = field.querySelector('input, select, textarea');
+      if (input) {
+        // Set const values if present
+        if (childEffective && childEffective.const !== undefined) {
+          input.value = childEffective.const;
+          input.readOnly = true;
+        } else {
+          // For non-const fields, set up event listeners
+          // Use event delegation to handle dynamically added array items
+          field.addEventListener('input', (e) => {
+            if (e.target.matches('input, select, textarea')) {
+              handleMutualExclusivity(key);
+            }
+          });
+          field.addEventListener('change', (e) => {
+            if (e.target.matches('input, select, textarea')) {
+              handleMutualExclusivity(key);
+            }
+          });
+
+          // Block clicks on disabled add buttons
+          field.addEventListener('click', (e) => {
+            if (e.target.matches('.array-add-button') && e.target.disabled) {
+              e.preventDefault();
+              e.stopPropagation();
+              return false;
+            }
+            // Also listen for array item removal
+            if (e.target.matches('.array-remove-button')) {
+              // Delay the check to allow the DOM to update after removal
+              setTimeout(() => handleMutualExclusivity(key), 10);
+            }
+          }, true); // Use capture phase to intercept before other handlers
+        }
+      }
+    }
+
+    baseFieldset.appendChild(field);
+  });
+
+  wrapper.appendChild(baseFieldset);
+  container.appendChild(wrapper);
+
+  function handleMutualExclusivity(activeField) {
+    // For arrays, check if any items have values
+    const activeFieldElement = baseFieldset.querySelector(`[data-property-name="${activeField}"]`);
+    let hasValue = false;
+
+    if (activeFieldElement) {
+      const inputs = activeFieldElement.querySelectorAll('input, select, textarea');
+      hasValue = Array.from(inputs).some(input => input.value.trim() !== '');
+    }
+
+    // Find other mutually exclusive fields and enable/disable them
+    mutuallyExclusiveFields.forEach(fieldName => {
+      if (fieldName !== activeField) {
+        const otherField = baseFieldset.querySelector(`[data-property-name="${fieldName}"]`);
+        if (otherField) {
+          const otherInputs = otherField.querySelectorAll('input, select, textarea');
+          const addButton = otherField.querySelector('.array-add-button');
+
+          // Disable/enable all inputs in the field
+          otherInputs.forEach(otherInput => {
+            if (!otherInput.readOnly) {
+              otherInput.disabled = hasValue;
+              if (hasValue) {
+                otherInput.value = '';
+              }
+            }
+          });
+
+          // Disable/enable array add button
+          if (addButton) {
+            addButton.disabled = hasValue;
+            addButton.style.opacity = hasValue ? '0.5' : '1';
+          }
+
+          // Visual feedback for the entire field
+          otherField.style.opacity = hasValue ? '0.5' : '1';
+        }
+      }
+    });
+
+    updateSchemaOutput();
+  }
+}
+
+function createComplexOneOfField(schema, path, container, isRequired, wrapper) {
+  // Render base properties first
+  const baseProperties = schema.properties || {};
+  const baseRequired = schema.required || [];
+
+  const baseFieldset = document.createElement("div");
+  baseFieldset.className = "schema-oneof-base";
+
+  Object.entries(baseProperties).forEach(([key, childSchema]) => {
+    const fieldPath = path === "root" ? key : `${path}.${key}`;
+    const field = document.createElement("div");
+    field.className = "schema-field";
+    field.dataset.propertyName = key; // Store the property name for easy access
+    const isFieldRequired = baseRequired.includes(key);
+    const label = document.createElement("label");
+    label.setAttribute("for", fieldId(fieldPath));
+    label.textContent = `${key}${isFieldRequired ? " *" : ""}`;
+    field.appendChild(label);
+    const childEffective = resolveSchema(childSchema);
+    if (childEffective && childEffective.description) {
+      const hint = document.createElement("p");
+      hint.className = "helper-text";
+      hint.textContent = childEffective.description;
+      field.appendChild(hint);
+    }
+    createControlForSchema(childSchema, fieldPath, field, isFieldRequired);
+    baseFieldset.appendChild(field);
+  });
+
+  wrapper.appendChild(baseFieldset);
+
+  // Create the oneOf selector for required field variants
+  const selectorWrapper = document.createElement("div");
+  selectorWrapper.className = "schema-oneof-selector-wrapper";
+
+  const selectorLabel = document.createElement("label");
+  selectorLabel.textContent = "Configuration Type";
+  selectorLabel.className = "schema-oneof-label";
+  selectorWrapper.appendChild(selectorLabel);
+
+  const selector = document.createElement("select");
+  selector.className = "schema-oneof-select";
+  schema.oneOf.forEach((option, idx) => {
+    const label = getOneOfOptionLabel(option, idx);
+    selector.appendChild(new Option(label, String(idx)));
+  });
+  selectorWrapper.appendChild(selector);
+
+  const optionsContainer = document.createElement("div");
+  optionsContainer.className = "schema-oneof-options";
+  optionsContainer.dataset.oneOfPath = path;
+  selector.addEventListener("change", () => {
+    renderComplexVariant(Number(selector.value));
+    updateSchemaOutput();
+  });
+
+  wrapper.appendChild(selectorWrapper);
+  wrapper.appendChild(optionsContainer);
+  container.appendChild(wrapper);
+  renderComplexVariant(0);
+
+  function renderComplexVariant(index) {
+    const variant = schema.oneOf[index] || schema.oneOf[0];
+    optionsContainer.innerHTML = "";
+    optionsContainer.dataset.selectedVariant = String(index);
+    selector.value = String(index);
+
+    // Get the required fields for this variant
+    const variantRequired = variant.required || [];
+    const variantProperties = variant.properties || {};
+
+    // Combine base required fields with variant required fields
+    const allRequiredFields = [...new Set([...baseRequired, ...variantRequired])];
+
+    // Debug: Show what fields are required by this variant
+    console.log(`Complex oneOf variant ${index}:`, {
+      baseRequired,
+      variantRequired,
+      allRequiredFields,
+      variantProperties,
+      baseProperties: Object.keys(baseProperties)
+    });
+
+    // Update base property visibility based on combined requirements
+    const baseFields = baseFieldset.querySelectorAll('.schema-field');
+    baseFields.forEach(field => {
+      const fieldName = field.dataset.propertyName;
+      if (fieldName) {
+        const isRequired = allRequiredFields.includes(fieldName);
+        const isOptional = baseProperties[fieldName] && !isRequired; // Field exists but not required
+        const shouldShow = isRequired || isOptional; // Show if required OR optional
+        const label = field.querySelector('label');
+        const input = field.querySelector('input, select, textarea');
+
+        console.log(`Field ${fieldName}: required=${isRequired}, optional=${isOptional}, shouldShow=${shouldShow}`);
+
+        // Show/hide field based on whether it should be visible
+        if (shouldShow) {
+          field.style.display = 'block';
+          // Update label to show required status
+          if (label) {
+            const originalText = label.textContent.replace(' *', '');
+            label.textContent = isRequired ? `${originalText} *` : originalText;
+          }
+          if (input) {
+            input.required = isRequired;
+
+            // For const values (like type), set the const value
+            const fieldSchema = baseProperties[fieldName];
+            const resolvedSchema = resolveSchema(fieldSchema);
+            if (resolvedSchema && resolvedSchema.const !== undefined) {
+              input.value = resolvedSchema.const;
+              input.readOnly = true; // Make const fields read-only
+              console.log(`Set const value for ${fieldName}: ${resolvedSchema.const}`);
+            }
+          }
+        } else {
+          field.style.display = 'none';
+          // Remove required status
+          if (label) {
+            const originalText = label.textContent.replace(' *', '');
+            label.textContent = originalText;
+          }
+          if (input) {
+            input.required = false;
+            input.value = ''; // Clear value when hidden
+            input.readOnly = false; // Remove read-only status
+          }
+        }
+      }
+    });
+
+    // Render any additional properties defined by the variant (rare case)
+    Object.entries(variantProperties).forEach(([key, childSchema]) => {
+      // Skip if this property is already in base properties
+      if (baseProperties[key]) return;
+
+      const fieldPath = path === "root" ? key : `${path}.${key}`;
+      const field = document.createElement("div");
+      field.className = "schema-field";
+      const isFieldRequired = variantRequired.includes(key);
+      const label = document.createElement("label");
+      label.setAttribute("for", fieldId(fieldPath));
+      label.textContent = `${key}${isFieldRequired ? " *" : ""}`;
+      field.appendChild(label);
+      const childEffective = resolveSchema(childSchema);
+      if (childEffective && childEffective.description) {
+        const hint = document.createElement("p");
+        hint.className = "helper-text";
+        hint.textContent = childEffective.description;
+        field.appendChild(hint);
+      }
+      createControlForSchema(childSchema, fieldPath, field, isFieldRequired);
+      optionsContainer.appendChild(field);
+    });
+
+    // Show helpful info about what's required
+    if (variantRequired.length > 0) {
+      const requiredFields = variantRequired.filter(field => baseProperties[field]);
+      if (requiredFields.length > 0) {
+        const hint = document.createElement("p");
+        hint.className = "helper-text";
+        hint.textContent = `Required fields: ${requiredFields.join(', ')}`;
+        optionsContainer.insertBefore(hint, optionsContainer.firstChild);
+      }
+    }
   }
 }
 
@@ -834,6 +1153,7 @@ function createArrayField(schema, path, container, isRequired) {
   wrapper.appendChild(itemsContainer);
   const addButton = document.createElement("button");
   addButton.type = "button";
+  addButton.className = "array-add-button"; // Add identifying class
 
   // Create a more user-friendly button label based on the path
   const fieldName = path.split('.').pop().split('[')[0];
@@ -841,7 +1161,14 @@ function createArrayField(schema, path, container, isRequired) {
   addButton.textContent = `Add ${singularName}`;
 
   addButton.classList.add("app-button", "secondary");
-  addButton.addEventListener("click", () => {
+  addButton.addEventListener("click", (e) => {
+    // Check if button is disabled due to mutual exclusivity
+    if (addButton.disabled) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+
     const currentCount = itemsContainer.querySelectorAll(":scope > .array-item").length;
     const maxItems = schema.maxItems;
 
@@ -915,6 +1242,36 @@ function createPatternPropertiesField(schema, path, container, required) {
 
   wrapper.appendChild(addButton);
   container.appendChild(wrapper);
+
+  // Check if this array should be disabled due to mutual exclusivity
+  // This handles the case where the array is created after mutual exclusivity is already active
+  const parentOneOfField = container.closest('.schema-oneof-base');
+  if (parentOneOfField) {
+    const fieldElement = addButton.closest('.schema-field');
+    if (fieldElement && fieldElement.dataset.propertyName) {
+      const fieldName = fieldElement.dataset.propertyName;
+      // Check if any other mutually exclusive fields have values
+      const allFields = parentOneOfField.querySelectorAll('[data-property-name]');
+      let shouldDisable = false;
+
+      allFields.forEach(otherField => {
+        const otherFieldName = otherField.dataset.propertyName;
+        if (otherFieldName !== fieldName) {
+          const otherInputs = otherField.querySelectorAll('input, select, textarea');
+          const hasValue = Array.from(otherInputs).some(input => input.value.trim() !== '');
+          if (hasValue) {
+            shouldDisable = true;
+          }
+        }
+      });
+
+      if (shouldDisable) {
+        addButton.disabled = true;
+        addButton.style.opacity = '0.5';
+        fieldElement.style.opacity = '0.5';
+      }
+    }
+  }
 }
 
 function addPatternPropertyEntry(container, patternProperties, basePath) {
@@ -1503,12 +1860,33 @@ function collectData(schema, path = "root") {
   if (!effective) return undefined;
   if (effective.__alwaysInvalid) return undefined;
   if (Array.isArray(effective.oneOf) && effective.oneOf.length) {
-    const variantContainer = getOneOfContainer(path);
-    const selectedIndex = variantContainer
-      ? Number(variantContainer.dataset.selectedVariant || "0")
-      : 0;
-    const variantSchema = effective.oneOf[selectedIndex] || effective.oneOf[0];
-    return collectData(variantSchema, path);
+    // Check if this is a complex oneOf with base properties + required-only variants (mutual exclusivity)
+    const hasBaseProperties = effective.properties && Object.keys(effective.properties).length > 0;
+    const hasRequiredOnlyVariants = effective.oneOf.every(variant =>
+      variant.required &&
+      Array.isArray(variant.required) &&
+      (!variant.properties || Object.keys(variant.properties).length === 0)
+    );
+
+    if (hasBaseProperties && hasRequiredOnlyVariants) {
+      // For mutual exclusivity oneOf, collect data from base properties
+      // The mutual exclusivity is handled at the UI level
+      const baseSchema = {
+        ...effective,
+        properties: effective.properties || {},
+        required: effective.required || []
+      };
+      delete baseSchema.oneOf; // Remove oneOf to avoid recursion
+      return collectData(baseSchema, path);
+    } else {
+      // For simple oneOf, use the variant selection approach
+      const variantContainer = getOneOfContainer(path);
+      const selectedIndex = variantContainer
+        ? Number(variantContainer.dataset.selectedVariant || "0")
+        : 0;
+      const variantSchema = effective.oneOf[selectedIndex] || effective.oneOf[0];
+      return collectData(variantSchema, path);
+    }
   }
   if (Array.isArray(effective.allOf) && effective.allOf.length) {
     // For allOf, merge schemas and collect data from the merged result
@@ -1595,6 +1973,13 @@ function collectData(schema, path = "root") {
   }
   const control = dom.schemaForm.querySelector(`[data-schema-path="${path}"]`);
   if (!control) return undefined;
+
+  // Check if the control is in a hidden field (for complex oneOf schemas)
+  const parentField = control.closest('.schema-field');
+  if (parentField && parentField.style.display === 'none') {
+    return undefined;
+  }
+
   return coerceValue(control.value, type || "string");
 }
 
@@ -1769,6 +2154,20 @@ function getOneOfOptionLabel(option, index) {
   if (Array.isArray(option.enum) && option.enum.length === 1) {
     return stringifySchemaValue(option.enum[0]);
   }
+
+  // Handle cases where oneOf only specifies required fields (no properties defined)
+  if (Array.isArray(option.required) && option.required.length > 0 &&
+    (!option.properties || Object.keys(option.properties).length === 0)) {
+    const requiredFields = option.required.filter(field => field !== 'type'); // Exclude common base fields
+    if (requiredFields.length > 0) {
+      if (requiredFields.length === 1) {
+        return `Use ${requiredFields[0]}`;
+      } else {
+        return `Use ${requiredFields.join(', ')}`;
+      }
+    }
+  }
+
   if (option.properties && typeof option.properties === "object") {
     const hintKeys = ["type", "action", "id", "name", "kind"];
     for (const key of hintKeys) {
